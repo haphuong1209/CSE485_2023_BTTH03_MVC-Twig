@@ -1,0 +1,39 @@
+<?php
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+
+    class MyEmailServer implements EmailServerInterface {
+        public function sendEmail($to, $name, $subject, $message) {
+            // Tạo một instance của PHPMailer
+            $mail = new PHPMailer(true);
+
+            try {
+                // Cấu hình cho SMTP
+                $mail->SMTPDebug = 0;                                    // Chế độ debug: 0 tắt, 1 bật.
+                $mail->isSMTP();                                         // Gửi mail bằng SMTP.
+                $mail->Host       = 'smtp.gmail.com';                    // SMTP server.
+                $mail->SMTPAuth   = true;                                // Bật chế độ SMTP authentication.
+                $mail->Username   = 'nthp1209@gmail.com';              // Tài khoản email của bạn.
+                $mail->Password   = 'dybyihclssxyvlvo';               // Mật khẩu của tài khoản email.
+                $mail->SMTPSecure = 'tls';                               // Enable TLS encryption, `ssl` cũng được chấp nhận.
+                $mail->Port       = 587;                                 // TCP port để kết nối tới server SMTP.
+
+                // Thiết lập thông tin người gửi và người nhận
+                $mail->setFrom('nthp1209@gmail.com', 'Nguyen Thi Ha Phuong');
+                $mail->addAddress($to, $name);     // Thêm địa chỉ email của người nhận.
+
+                // Thiết lập các thông tin về email
+                $mail->isHTML(true);                                  // Set email format to HTML.
+                $mail->Subject = $subject;
+                $mail->Body    = $message;
+
+                // Gửi email
+                $mail->send();
+                echo 'Email đã được gửi đi thành công!';
+            } 
+            catch (Exception $e) {
+                echo "Không thể gửi email. Lỗi: {$mail->ErrorInfo}";
+            }
+        }
+    }    
+?>
